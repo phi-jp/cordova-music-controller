@@ -1,0 +1,32 @@
+{
+  "name": "cordova-music-remote-controls",
+  "version": "1.0.0",
+  "description": "Music lockscreen controls for Cordova apps",
+  "cordova": {
+    "id": "cordova-music-remote-controls",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "music",
+    "controller",
+    "controls",
+    "media",
+    "plugin",
+    "notification",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.4.0"
+    }
+  ],
+  "author": "Shane",
+  "license": "MIT",
+}
