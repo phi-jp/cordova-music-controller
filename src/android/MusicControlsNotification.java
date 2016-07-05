@@ -43,7 +43,7 @@ public class MusicControlsNotification {
 	// Show or update notification
 	public void updateNotification(MusicControlsInfos newInfos){
 		// Check if the cover has changed
-		if (!newInfos.cover.isEmpty() && (this.infos == null || !newInfos.artwork.equals(this.infos.artwork))){
+		if (!newInfos.artwork.isEmpty() && (this.infos == null || !newInfos.artwork.equals(this.infos.artwork))){
 			this.getBitmapCover(newInfos.artwork);
 		}
 		this.infos = newInfos;
