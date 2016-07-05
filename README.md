@@ -80,7 +80,8 @@ MusicControls.subscribe(events);
 MusicControls.listen();
 ```
 
-- Toggle play/pause:
+- Methods:
+
 ```javascript
 MusicControls.updateIsPlaying(true); // toggle the play/pause notification button [Android]
 
