@@ -8,7 +8,34 @@
 ## Methods
 - Create the media controls:
 ```javascript
-MusicControls.create({
+
+  function remoteCommandCallback(event,value){
+          switch(event){
+              case MusicControls.EVENT_PLAY:
+                  console.log("######### remoteCommandCallback, event: PLAY");
+                  //"value" is zero for this event
+                  break;
+              case MusicControls.EVENT_PAUSE:
+                  console.log("######### remoteCommandCallback, event: PAUSE");
+                  //"value" is zero for this event
+                  break;
+              case MusicControls.EVENT_TOGGLE_PLAY_PAUSE:
+                  console.log("######### remoteCommandCallback, event: TOGGLE PLAY PAUSE");
+                  //"value" is zero for this event
+                  break;
+              case MusicControls.EVENT_SKIP_FORWARD:
+                  console.log("######### remoteCommandCallback, event: SKIP FW");
+                  //"value" is the amout of seconds to skip (the value in info.skipForwardValue)
+                  break;
+              case MusicControls.EVENT_SKIP_BACKWARD:
+                  console.log("######### remoteCommandCallback, event: SKIP BW");
+                  //"value" is the amout of seconds to skip (the value in info.skipBackwardValue)
+                  break;
+          }//switch
+      }
+
+
+var info = {
 	title       	: 'Title',		// optional, default : ''
 	artist      	: 'Artist',		// optional, default : ''
 	artwork	: 'albums/cover.jpg',		// optional, default : nothing
@@ -36,57 +63,31 @@ MusicControls.create({
   	skipForwardValue	:30,
   	skipBackwardValue	:30
 	
-}, onSuccess, onError);
+};
+
+var mControl = new MusicControls(info,remoteCommandCallback);
+
+// Register callback for android
+mControl.subscribe(remoteCommandCallback);
+
+// Start listening for events
+// The plugin will run the events function each time an event is fired
+mControl.listen();
+
 ```
 
 - Destroy the media controller:
 ```javascript
-MusicControls.destroy(onSuccess, onError);
+mControl.destroy(clearInfo);
 ```
-
-- Subscribe events to the media controller:
-```javascript
-function events(action) {
-	switch(action) {
-		case 'music-controls-next':
-			// Do something
-			break;
-		case 'music-controls-previous':
-			// Do something
-			break;
-		case 'music-controls-pause':
-			// Do something
-			break;
-		case 'music-controls-play-or-pause':
-			// Do something [iOS]
-			break;
-		case 'music-controls-play':
-			// Do something
-			break;
-		case 'music-controls-destroy':
-			// Do something
-			break;
-		default:
-			break;
-	}
-}
-
-// Register callback
-MusicControls.subscribe(events);
-
-// Start listening for events
-// The plugin will run the events function each time an event is fired
-MusicControls.listen();
-```
-
 - Methods:
 
 ```javascript
-MusicControls.updateIsPlaying(true); // toggle the play/pause notification button [Android]
+updateIsPlaying(true): Toggle the play/pause notification button [Android]
 
-MusicControls.updateInfo(info): Updates the information shown in the lock screen.
+updateInfo(info): Updates the information shown in the lock screen.
 
-MusicControls.updatePlaybackRate(newPlaybackRate): Updates (only) the playback rate. Uses updateInfo internally [iOS].
+updatePlaybackRate(newPlaybackRate): Updates (only) the playback rate. Uses updateInfo internally [iOS].
 
-MusicControls.updatePlaybackPosition(newPlaybackPosition): Updates (only) the playback position. Uses updateInfo internally [iOS].
+updatePlaybackPosition(newPlaybackPosition): Updates (only) the playback position. Uses updateInfo internally [iOS].
 ```
