@@ -85,7 +85,7 @@ MusicControls.prototype.listen = function () {
 };
 
 MusicControls.prototype.receiveCallbackFromNative = function (messageFromNative) {
-  module.exports.eventCallback(messageFromNative);
+  musicControlObject.eventCallback(messageFromNative);
   cordova.exec(musicControlObject.receiveCallbackFromNative, function (res) {
   }, 'MusicControls', 'watch', []);
 };
