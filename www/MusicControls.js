@@ -1,71 +1,132 @@
-module.exports = {
-  updateCallback: function () {},
+/*
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+*/
 
-  create: function (data, successCallback, errorCallback) {
-    if (data.artist === undefined) {
-      data.artist = '';
-    }
-    if (data.title === undefined) {
-      data.title = '';
-    }
-    if (data.artwork === undefined) {
-      data.artwork = '';
-    }
-    if (data.ticker === undefined) {
-      data.ticker = '';
-    }
-    if (data.isPlaying === undefined) {
-      data.isPlaying = true;
-    }
-    if (data.hasPrev === undefined) {
-      data.hasPrev = true;
-    }
-    if (data.hasNext === undefined) {
-      data.hasNext = true;
-    }
-    if (data.hasClose === undefined) {
-      data.hasClose = false;
-    }
-    if (data.dismissable === undefined) {
-      data.dismissable = false;
-    }
+var argscheck = require('cordova/argscheck'),
+    utils = require('cordova/utils'),
+    exec = require('cordova/exec');
 
-    cordova.exec(successCallback, errorCallback, 'MusicControls', 'create', [data]);
-  },
+var musicControlObject = null;
 
-  updateIsPlaying: function (isPlaying, successCallback, errorCallback) {
-    cordova.exec(successCallback, errorCallback, 'MusicControls', 'updateIsPlaying', [{isPlaying: isPlaying}]);
-  },
-
-  updateInfo: function(info) {
-    cordova.exec(successCallback, errorCallback, "MusicControls", "updateInfo", [info]);
-  },
-
-  updatePlaybackRate: function(rate) {
-    cordova.exec(successCallback, errorCallback, "MusicControls", "updateInfo", [{'playbackRate':rate}]);
-  },
-
-  updatePlaybackPosition: function(pos) {
-    cordova.exec(successCallback, errorCallback, "MusicControls", "updateInfo", [{'playbackPosition':pos}]);
-  },
-
-  destroy: function (successCallback, errorCallback) {
-    cordova.exec(successCallback, errorCallback, 'MusicControls', 'destroy', []);
-  },
-
-  // Register callback
-  subscribe: function (onUpdate) {
-    module.exports.updateCallback = onUpdate;
-  },
-  // Start listening for events
-  listen: function () {
-    cordova.exec(module.exports.receiveCallbackFromNative, function (res) {
-    }, 'MusicControls', 'watch', []);
-  },
-  receiveCallbackFromNative: function (messageFromNative) {
-    module.exports.updateCallback(messageFromNative);
-    cordova.exec(module.exports.receiveCallbackFromNative, function (res) {
-    }, 'MusicControls', 'watch', []);
-  }
-
+/**
+ * This class provides access to the device media, interfaces to both sound and video
+ *
+ * @constructor
+ * @param src                   The file name or url to play
+ * @param successCallback       The callback to be called when the file is done playing or recording.
+ *                                  successCallback()
+ * @param errorCallback         The callback to be called if there is an error.
+ *                                  errorCallback(int errorCode) - OPTIONAL
+ * @param statusCallback        The callback to be called when media status has changed.
+ *                                  statusCallback(int statusCode) - OPTIONAL
+ */
+var MusicControls = function(eventsAndInfo, eventCallback) {
+    //argscheck.checkArgs('sFFF', 'Media', arguments);
+	if(musicControlObject){
+		exec(null, null, "MusicControls", "destroy", []);
+		delete musicControlObject;
+	}
+    musicControlObject = this;
+    this.eventsAndInfo = eventsAndInfo;
+    this.eventCallback = eventCallback;
+    exec(null, null, "MusicControls", "create", [eventsAndInfo]);
 };
+
+MusicControls.prototype.release = function(clearInfo) {
+	var clearInfoNr;
+	if(typeof(clearInfo)!=='undefined' && clearInfo)clearInfoNr=1;
+	else clearInfoNr=0;
+    exec(null, null, "MusicControls", "destroy", [clearInfoNr]);
+    delete musicControlObject;
+    musicControlObject=null;
+};
+
+MusicControls.prototype.updateInfo = function(info) {
+    exec(null, null, "MusicControls", "updateInfo", [info]);
+};
+
+//easier-to-use functions
+MusicControls.prototype.updatePlaybackRate = function(rate) {
+    exec(null, null, "MusicControls", "updateInfo", [{'playbackRate':rate}]);
+};
+MusicControls.prototype.updatePlaybackPosition = function(pos) {
+    exec(null, null, "MusicControls", "updateInfo", [{'playbackPosition':pos}]);
+};
+
+// Register callback
+MusicControls.prototype.subscribe = function (eventType) {
+  if(!musicControlObject)return;
+  if(typeof(musicControlObject.eventCallback)!=='function')return;
+
+	musicControlObject.eventCallback(eventType);
+};
+
+// Start listening for events
+MusicControls.prototype.listen = function () {
+  cordova.exec(musicControlObject.receiveCallbackFromNative, function (res) {
+  }, 'MusicControls', 'watch', []);
+};
+
+MusicControls.prototype.receiveCallbackFromNative = function (messageFromNative) {
+  module.exports.eventCallback(messageFromNative);
+  cordova.exec(musicControlObject.receiveCallbackFromNative, function (res) {
+  }, 'MusicControls', 'watch', []);
+};
+
+
+MusicControls.EVENT_PLAY = "music-controller-play";
+MusicControls.EVENT_PAUSE = 'music-controller-pause';
+MusicControls.EVENT_TOGGLE_PLAY_PAUSE = 'music-controller-play-pause';
+
+MusicControls.EVENT_SKIP_FORWARD = 'music-controller-next';
+MusicControls.EVENT_SKIP_BACKWARD = 'music-controller-previous';
+
+
+MusicControls.onEvent = function(eventType, value) {
+	if(!musicControlObject)return;
+	if(typeof(musicControlObject.eventCallback)!=='function')return;
+
+	musicControlObject.eventCallback(eventType,value);
+};
+
+module.exports = MusicControls;
+
+function onMessageFromNative(msg) {
+    if (msg.action == 'event') {
+        MusicControls.onEvent(msg.event.type, msg.event.value);
+    } else {
+        throw new Error('Unknown MusicControls action' + msg.action);
+    }
+}
+
+
+/*
+if (cordova.platformId === 'android' || cordova.platformId === 'amazon-fireos' || cordova.platformId === 'windowsphone') {
+
+    var channel = require('cordova/channel');
+
+    channel.createSticky('onMediaPluginReady');
+    channel.waitForInitialization('onMediaPluginReady');
+
+    channel.onCordovaReady.subscribe(function() {
+        exec(onMessageFromNative, undefined, 'Media', 'messageChannel', []);
+        channel.initializationComplete('onMediaPluginReady');
+    });
+}*/
