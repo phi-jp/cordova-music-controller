@@ -91,12 +91,12 @@ MusicControls.prototype.receiveCallbackFromNative = function (messageFromNative)
 };
 
 
-MusicControls.EVENT_PLAY = "music-controller-play";
-MusicControls.EVENT_PAUSE = 'music-controller-pause';
-MusicControls.EVENT_TOGGLE_PLAY_PAUSE = 'music-controller-play-pause';
+MusicControls.EVENT_PLAY = "music-control-play";
+MusicControls.EVENT_PAUSE = 'music-control-pause';
+MusicControls.EVENT_TOGGLE_PLAY_PAUSE = 'music-control-play-pause';
 
-MusicControls.EVENT_SKIP_FORWARD = 'music-controller-next';
-MusicControls.EVENT_SKIP_BACKWARD = 'music-controller-previous';
+MusicControls.EVENT_SKIP_FORWARD = 'music-control-next';
+MusicControls.EVENT_SKIP_BACKWARD = 'music-control-previous';
 
 
 MusicControls.onEvent = function(eventType, value) {
