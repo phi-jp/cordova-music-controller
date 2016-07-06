@@ -212,32 +212,32 @@ NSMutableDictionary *newInfo;
 
 - (void) playEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-music-remote-control.MusicControls').onEvent","music-controls-play",0];
+                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent","music-controls-play",0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) pauseEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-music-remote-control.MusicControls').onEvent","music-controls-pause",0];
+                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent","music-controls-pause",0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) playOrPauseEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-music-remote-control.MusicControls').onEvent","music-controls-play-or-pause",0];
+                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent","music-controls-play-or-pause",0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) skipForwardEvent:(MPSkipIntervalCommandEvent *)event {
     NSLog(@"XXXXXXXXX SkipForwardEvent: %@",event);
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%f);",
-                @"cordova.require('cordova-music-remote-control.MusicControls').onEvent","music-controls-next",event.interval];
+                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent","music-controls-next",event.interval];
     [self.commandDelegate evalJs:jsString];
 }
 - (void) skipBackwardEvent:(MPSkipIntervalCommandEvent *)event {
     NSLog(@"XXXXXXXXX SkipBackwardEvent: %@",event);
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%f);",
-                @"cordova.require('cordova-music-remote-control.MusicControls').onEvent","music-controls-previous",event.interval];
+                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent","music-controls-previous",event.interval];
     [self.commandDelegate evalJs:jsString];
 }
 
