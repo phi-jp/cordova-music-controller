@@ -49,7 +49,7 @@ var MusicControls = function(eventsAndInfo, eventCallback) {
     exec(null, null, "MusicControls", "create", [eventsAndInfo]);
 };
 
-MusicControls.prototype.release = function(clearInfo) {
+MusicControls.prototype.destroy = function(clearInfo) {
 	var clearInfoNr;
 	if(typeof(clearInfo)!=='undefined' && clearInfo)clearInfoNr=1;
 	else clearInfoNr=0;
@@ -69,6 +69,10 @@ MusicControls.prototype.updatePlaybackRate = function(rate) {
 MusicControls.prototype.updatePlaybackPosition = function(pos) {
     exec(null, null, "MusicControls", "updateInfo", [{'playbackPosition':pos}]);
 };
+
+MusicControls.prototype.updateIsPlaying = function (isPlaying) {
+   cordova.exec(null, null, 'MusicControls', 'updateIsPlaying', [{isPlaying: isPlaying}]);
+ };
 
 // Register callback
 MusicControls.prototype.subscribe = function (eventType) {
@@ -94,9 +98,9 @@ MusicControls.prototype.receiveCallbackFromNative = function (messageFromNative)
 MusicControls.EVENT_PLAY = "music-controls-play";
 MusicControls.EVENT_PAUSE = 'music-controls-pause';
 MusicControls.EVENT_TOGGLE_PLAY_PAUSE = 'music-controls-play-pause';
-
 MusicControls.EVENT_SKIP_FORWARD = 'music-controls-next';
 MusicControls.EVENT_SKIP_BACKWARD = 'music-controls-previous';
+MusicControls.EVENT_DESTROY = 'music-controls-destroy';
 
 
 MusicControls.onEvent = function(eventType, value) {
