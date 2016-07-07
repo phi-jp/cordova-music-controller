@@ -94,13 +94,24 @@ MusicControls.prototype.receiveCallbackFromNative = function (messageFromNative)
   }, 'MusicControls', 'watch', []);
 };
 
+if (cordova.platformId === 'android')
+{
+  MusicControls.EVENT_PLAY = 'music-controls-play';
+  MusicControls.EVENT_PAUSE = 'music-controls-pause';
+  MusicControls.EVENT_TOGGLE_PLAY_PAUSE = 'music-controls-play-pause';
+  MusicControls.EVENT_SKIP_FORWARD = 'music-controls-next';
+  MusicControls.EVENT_SKIP_BACKWARD = 'music-controls-previous';
+  MusicControls.EVENT_DESTROY = 'music-controls-destroy';
+}
+else if (cordova.platformId === 'ios') {
+  MusicControls.EVENT_PLAY = 1;
+  MusicControls.EVENT_PAUSE = 2;
+  MusicControls.EVENT_TOGGLE_PLAY_PAUSE = 3;
+  MusicControls.EVENT_SKIP_FORWARD = 4;
+  MusicControls.EVENT_SKIP_BACKWARD = 5;
+  MusicControls.EVENT_DESTROY = 6;
+}
 
-MusicControls.EVENT_PLAY = "music-controls-play";
-MusicControls.EVENT_PAUSE = 'music-controls-pause';
-MusicControls.EVENT_TOGGLE_PLAY_PAUSE = 'music-controls-play-pause';
-MusicControls.EVENT_SKIP_FORWARD = 'music-controls-next';
-MusicControls.EVENT_SKIP_BACKWARD = 'music-controls-previous';
-MusicControls.EVENT_DESTROY = 'music-controls-destroy';
 
 
 MusicControls.onEvent = function(eventType, value) {
