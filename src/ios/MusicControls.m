@@ -208,32 +208,32 @@ NSMutableDictionary *newInfo;
 
 - (void) playEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent",1,0];
+                @"cordova.require('cordova-music-controller.MusicControls').onEvent",1,0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) pauseEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent",2,0];
+                @"cordova.require('cordova-music-controller.MusicControls').onEvent",2,0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) playOrPauseEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent",3,0];
+                @"cordova.require('cordova-music-controller.MusicControls').onEvent",3,0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) skipForwardEvent:(MPSkipIntervalCommandEvent *)event {
     NSLog(@"XXXXXXXXX SkipForwardEvent: %@",event);
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%f);",
-                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent",4,event.interval];
+                @"cordova.require('cordova-music-controller.MusicControls').onEvent",4,event.interval];
     [self.commandDelegate evalJs:jsString];
 }
 - (void) skipBackwardEvent:(MPSkipIntervalCommandEvent *)event {
     NSLog(@"XXXXXXXXX SkipBackwardEvent: %@",event);
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%f);",
-                @"cordova.require('cordova-music-remote-controls.MusicControls').onEvent",5,event.interval];
+                @"cordova.require('cordova-music-controller.MusicControls').onEvent",5,event.interval];
     [self.commandDelegate evalJs:jsString];
 }
 
