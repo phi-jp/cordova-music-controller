@@ -20,8 +20,8 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
 xmlns:android="http://schemas.android.com/apk/res/android"
-id="cordova-music-remote-controls"
-    version="1.0.0">
+id="cordova-music-controller"
+    version="0.0.1">
 
     <name>RemoteCommand and PlayingInfo</name>
     <description>Cordova Media Remote Command and Now Playing Info Centers Plugin</description>
