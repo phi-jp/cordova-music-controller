@@ -27,8 +27,9 @@
 
 NSMutableDictionary *newInfo;
 
-- (NSURL*)urlForArtwork:(NSString*)resourcePath
+- (MPMediaItemArtwork *) urlForArtwork: (NSString *) resourcePath
 {
+    UIImage * coverImage = nil;
     NSURL* resourceURL = nil;
     NSString* filePath = nil;
 
@@ -66,17 +67,12 @@ NSMutableDictionary *newInfo;
     }
     // if the resourcePath resolved to a file path, check that file exists
     if (filePath != nil) {
-        // create resourceURL
-        resourceURL = [NSURL fileURLWithPath:filePath];
-        // try to access file
-        NSFileManager* fMgr = [NSFileManager defaultManager];
-        if (![fMgr fileExistsAtPath:filePath]) {
-            resourceURL = nil;
-            NSLog(@"Unknown resource '%@'", resourcePath);
-        }
+        NSURL * coverImageUrl = [NSURL URLWithString:filePath];
+        NSData * coverImageData = [NSData dataWithContentsOfURL: coverImageUrl];
+        coverImage = [UIImage imageWithData: coverImageData];
     }
 
-    return resourceURL;
+    return [[MPMediaItemArtwork alloc] initWithImage:coverImage];
 }
 
 
@@ -197,12 +193,12 @@ NSMutableDictionary *newInfo;
     //do we have artwork?
     NSString *infoArtwork=[audioInfo objectForKey:@"artwork"];
     if(infoArtwork){
-        NSURL *url=[self urlForArtwork:infoArtwork];
-        if(url){
-            MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage: [UIImage imageWithData: [NSData dataWithContentsOfURL:url]]];
-            if(artwork)
-                [newInfo setObject: artwork forKey: MPMediaItemPropertyArtwork];
+
+        MPMediaItemArtwork *artwork = [self urlForArtwork:infoArtwork];
+        if(artwork) {
+            [newInfo setObject: artwork forKey: MPMediaItemPropertyArtwork];
         }
+
     }
 
 

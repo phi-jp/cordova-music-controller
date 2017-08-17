@@ -46,7 +46,7 @@ typedef NSUInteger CDVMediaMsg;
 
 @interface MusicControls : CDVPlugin
 
-- (NSURL*)urlForArtwork:(NSString*)resourcePath;
+- (MPMediaItemArtwork *) urlForArtwork: (NSString *) coverUri;
 - (void)release:(CDVInvokedUrlCommand*)command;
 - (void)updateInfo:(CDVInvokedUrlCommand*)command;
 
